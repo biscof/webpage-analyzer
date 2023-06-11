@@ -1,15 +1,17 @@
 package hexlet.code;
 
+import hexlet.code.controllers.RootController;
 import io.javalin.Javalin;
-import org.h2.store.fs.FilePath;
+
+//import io.javalin.plugin.rendering.template.JavalinThymeleaf;
+import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class App {
     private static int getPort() {
@@ -19,28 +21,49 @@ public class App {
 
 
     private static void addRoutes(Javalin app) {
-        app.get("/", ctx -> {
-            ctx.result("Hello World");
-        });
+//        app.get("/", ctx -> {
+//            ctx.result("Hello World");
+//        });
+//        app.get("/", RootController.welcome);
 //        app.routes(() -> {
 //
 //        });
     }
 
+    private static TemplateEngine getTemplateEngine() {
+        TemplateEngine templateEngine = new TemplateEngine();
+        templateEngine.addDialect(new LayoutDialect());
+        templateEngine.addDialect(new Java8TimeDialect());
+
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("/templates/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setCharacterEncoding("UTF-8");
+
+        templateEngine.addTemplateResolver(templateResolver);
+
+        return templateEngine;
+    }
+
     public static Javalin getApp() {
         Javalin app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
+//            config.enableWebjars();
+//            JavalinThymeleaf.configure(getTemplateEngine());
         });
-        addRoutes(app);
-        app.before(ctx -> {
-            ctx.attribute("ctx", ctx);
-        });
+
+//        addRoutes(app);
+//        app.before(ctx -> {
+//            ctx.attribute("ctx", ctx);
+//        });
 
         return app;
     }
 
     public static void main(String[] args) throws SQLException, IOException {
         Javalin app = getApp();
+        app.get("/", ctx -> ctx.result("Hello World"));
         app.start(getPort());
     }
 }

@@ -1,9 +1,10 @@
 plugins {
     id 'application'
     id 'checkstyle'
-    id 'io.ebean' version '13.18.0'
+    id 'com.adarshr.test-logger' version '3.0.0'
+    id 'com.github.ben-manes.versions' version '0.39.0'
+    id 'io.ebean' version '12.11.5'
     id 'jacoco'
-    id 'java'
 }
 
 group 'hexlet.code'
@@ -14,12 +15,11 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.javalin:javalin:5.5.0'
-    implementation 'org.slf4j:slf4j-simple:2.0.5'
+    implementation 'io.javalin:javalin:5.6.0'
+    implementation 'org.slf4j:slf4j-simple:2.0.7'
 
     implementation 'com.h2database:h2:2.1.214'
-    implementation 'org.postgresql:postgresql:42.5.4'
-
+    implementation 'org.postgresql:postgresql:42.6.0'
 
     implementation 'io.ebean:ebean:13.15.0'
     implementation 'io.ebean:ebean-ddl-generator:13.15.0'
@@ -27,6 +27,12 @@ dependencies {
     implementation 'io.ebean:ebean-migration:13.7.0'
     implementation 'io.ebean:ebean-annotation:8.3'
     annotationProcessor 'io.ebean:querybean-generator:13.15.0'
+
+    implementation 'org.thymeleaf:thymeleaf:3.0.12.RELEASE'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.0.0'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE'
+
+    implementation 'org.webjars:bootstrap:5.2.3'
 
     implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.5'
     implementation 'javax.activation:activation:1.1.1'
