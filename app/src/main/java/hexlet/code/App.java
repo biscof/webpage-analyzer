@@ -3,7 +3,7 @@ package hexlet.code;
 import hexlet.code.controllers.RootController;
 import io.javalin.Javalin;
 
-//import io.javalin.plugin.rendering.template.JavalinThymeleaf;
+import io.javalin.rendering.template.JavalinThymeleaf;
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
@@ -19,12 +19,8 @@ public class App {
         return Integer.valueOf(port);
     }
 
-
     private static void addRoutes(Javalin app) {
-//        app.get("/", ctx -> {
-//            ctx.result("Hello World");
-//        });
-//        app.get("/", RootController.welcome);
+        app.get("/", RootController.welcome);
 //        app.routes(() -> {
 //
 //        });
@@ -36,7 +32,7 @@ public class App {
         templateEngine.addDialect(new Java8TimeDialect());
 
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("/templates/");
+        templateResolver.setPrefix("templates/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setCharacterEncoding("UTF-8");
@@ -49,21 +45,18 @@ public class App {
     public static Javalin getApp() {
         Javalin app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
-//            config.enableWebjars();
-//            JavalinThymeleaf.configure(getTemplateEngine());
+            JavalinThymeleaf.init(getTemplateEngine());
         });
 
-//        addRoutes(app);
+        addRoutes(app);
 //        app.before(ctx -> {
 //            ctx.attribute("ctx", ctx);
 //        });
-//        System.getenv()
         return app;
     }
 
     public static void main(String[] args) throws SQLException, IOException {
         Javalin app = getApp();
-        app.get("/", ctx -> ctx.result("Hello World"));
         app.start(getPort());
     }
 }
