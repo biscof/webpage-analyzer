@@ -1,5 +1,6 @@
-package hexlet.code.model;
+package hexlet.code.models;
 
+import io.ebean.Model;
 import io.ebean.annotation.WhenCreated;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -9,7 +10,7 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "urls")
-public class Url {
+public class Url extends Model {
     @Id
     private int id;
     private String name;

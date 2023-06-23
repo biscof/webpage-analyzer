@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <title>Welcome</title>
-  <link rel='stylesheet' href='/webjars/bootstrap/5.2.3/css/bootstrap.min.css'>
+    <meta charset="UTF-8">
+    <title>Анализатор страниц</title>
+    <link rel='stylesheet' href='/webjars/bootstrap/5.2.3/css/bootstrap.min.css'>
 </head>
-<section>
-  <div>
-      <p>The beginning...</p>
-  </div>
-</section>
+<body>
+    <div>
+        <form action="/urls" method="post">
+            <label for="link">Ссылка</label>
+            <input type="url" id="link" name="url">
+            <button type="submit">Проверить</button>
+        </form>
+    </div>
+</body>
