@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/application.html}">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <section layout:fragment="content">
+        <div class="container">
+            <div th:if="${session.flash}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                <p class="m-0" th:text="${ctx.consumeSessionAttribute('flash')}"></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="mt-5">
+                <h1 >Сайты</h1>
+                <table class="table">
+                    <thead>
+                        <th>ID</th>
+                        <th>Имя</th>
+                    </thead>
+                    <tbody>
+                        <tr th:each="url : ${urls}" th:object="${url}">
+                            <td th:text="*{getId()}"></td>
+                            <td><a th:href="*{getName()}" th:text="*{getName()}"></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <nav>
+            <ul th:if="${urls}" class="pagination justify-content-center mt-5">
+                <li th:class="${page <= 1} ? 'page-item disabled' : 'page-item'">
+                    <a class="page-link" th:href="@{/urls(page=${page - 1})}" th:text="Назад"></a>
+                </li>
+                <li class="page-item active">
+                    <a class="page-link" th:href="@{/urls(page=${page})}" th:text="${page}"></a>
+                </li>
+                <li th:class="${page >= totalPages} ? 'page-item disabled' : 'page-item'">
+                    <a class="page-link" th:href="@{/urls(page=${page + 1})}" th:text="Вперёд"></a>
+                </li>
+            </ul>
+        </nav>
+    </section>
+</body>
+</html>
