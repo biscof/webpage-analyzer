@@ -6,6 +6,7 @@ import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
+import static io.javalin.apibuilder.ApiBuilder.get;
 
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.thymeleaf.TemplateEngine;
@@ -27,6 +28,7 @@ public class App {
         app.routes(() -> {
             path("/urls", () -> {
                 post(UrlController.createUrl);
+                get(UrlController.listUrls);
             });
         });
     }
@@ -50,13 +52,14 @@ public class App {
     public static Javalin getApp() {
         Javalin app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
+            config.staticFiles.enableWebjars();
             JavalinThymeleaf.init(getTemplateEngine());
         });
 
         addRoutes(app);
-//        app.before(ctx -> {
-//            ctx.attribute("ctx", ctx);
-//        });
+        app.before(ctx -> {
+            ctx.attribute("ctx", ctx);
+        });
         return app;
     }
 
