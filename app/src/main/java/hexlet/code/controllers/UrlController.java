@@ -2,11 +2,12 @@ package hexlet.code.controllers;
 
 import hexlet.code.models.Url;
 import hexlet.code.models.query.QUrl;
-import io.ebeaninternal.server.util.Str;
+import io.ebean.PagedList;
 import io.javalin.http.Handler;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 public class UrlController {
 
@@ -49,6 +50,27 @@ public class UrlController {
             ctx.sessionAttribute("flash", "Страница уже существует");
         }
 
-        ctx.render("index.html");
+        ctx.redirect("/urls");
+    };
+
+    public static Handler listUrls = ctx -> {
+        int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
+        int rowsPerPage = 10;
+        int offset = (page - 1) * rowsPerPage;
+
+        PagedList<Url> pagedUrls = new QUrl()
+                .setFirstRow(offset)
+                .setMaxRows(rowsPerPage)
+                .orderBy()
+                    .id.asc()
+                .findPagedList();
+
+        List<Url> urls = pagedUrls.getList();
+        int totalPages = pagedUrls.getTotalPageCount();
+
+        ctx.attribute("urls", urls);
+        ctx.attribute("totalPages", totalPages);
+        ctx.attribute("page", page);
+        ctx.render("urls/index.html");
     };
 }
