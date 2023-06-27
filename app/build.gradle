@@ -20,7 +20,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-simple:2.0.7'
 
     implementation 'com.h2database:h2:2.1.214'
-    implementation 'org.postgresql:postgresql:42.6.0'
+    implementation 'org.postgresql:postgresql:42.5.4'
 
     implementation 'io.ebean:ebean:13.15.0'
     implementation 'io.ebean:ebean-ddl-generator:13.15.0'
