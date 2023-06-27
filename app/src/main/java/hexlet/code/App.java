@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import hexlet.code.controllers.CheckController;
 import hexlet.code.controllers.RootController;
 import hexlet.code.controllers.UrlController;
 import io.javalin.Javalin;
@@ -16,6 +17,7 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map;
 
 public class App {
     private static int getPort() {
@@ -23,12 +25,23 @@ public class App {
         return Integer.valueOf(port);
     }
 
+    private static String getMode() {
+        return System.getenv().getOrDefault("APP_ENV", "development");
+    }
+
     private static void addRoutes(Javalin app) {
         app.get("/", RootController.welcome);
         app.routes(() -> {
-            path("/urls", () -> {
+            path("urls", () -> {
                 post(UrlController.createUrl);
                 get(UrlController.listUrls);
+                path("{id}", () -> {
+                    get(UrlController.showUrl);
+//                    path("checks", () -> {
+//                        post(CheckController.createCheck);
+//                        get(CheckController.listChecks);
+//                    });
+                });
             });
         });
     }
@@ -51,7 +64,9 @@ public class App {
 
     public static Javalin getApp() {
         Javalin app = Javalin.create(config -> {
-            config.plugins.enableDevLogging();
+            if (getMode().equals("development")) {
+                config.plugins.enableDevLogging();
+            }
             config.staticFiles.enableWebjars();
             JavalinThymeleaf.init(getTemplateEngine());
         });

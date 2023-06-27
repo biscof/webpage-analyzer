@@ -12,7 +12,7 @@ import java.time.Instant;
 @Table(name = "urls")
 public class Url extends Model {
     @Id
-    private int id;
+    private long id;
     private String name;
 
     @WhenCreated
@@ -22,7 +22,7 @@ public class Url extends Model {
         this.name = name;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

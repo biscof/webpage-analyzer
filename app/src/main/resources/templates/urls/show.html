@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/application.html}">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <section layout:fragment="content">
+        <div class="container">
+            <div th:if="${session.flash}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                <p class="m-0" th:text="${ctx.consumeSessionAttribute('flash')}"></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="mt-5" th:object="${url}">
+                <h1 th:text="'Сайт ' + *{getName()}"></h1>
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td>ID</td>
+                        <td th:text="*{getId()}"></td>
+                    </tr>
+                    <tr>
+                        <td>Имя</td>
+                        <td th:text="*{getName()}"></td>
+                    </tr>
+                    <tr>
+                        <td>Дата создания</td>
+                        <td th:text="${#temporals.format(url.getCreatedAt(), 'dd/MM/yyyy HH:mm')}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-5">
+                <h2>Проверки</h2>
+                <form th:action="@{/urls/{id}/checks(id=${url.getId()})}" method="post">
+                    <button type="submit" class="btn btn-primary">Запустить проверку</button>
+                </form>
+                <table class="table">
+                    <thead>
+                        <th>ID</th>
+                        <th>title</th>
+                        <th>Код ответа</th>
+                        <th>h1</th>
+                        <th>description</th>
+                        <th>Дата проверки</th>
+                    </thead>
+                    <tbody>
+<!--                        <tr th:each="check : ${checks}" th:object="${check}">-->
+<!--                            <td th:text="*{getId()}"></td>-->
+<!--                            <td th:text="*{getResponseCode()}"></td>-->
+<!--                            <td th:text="*{getTitle()}"></td>-->
+<!--                            <td th:text="*{getH1()}"></td>-->
+<!--                            <td th:text="*{getDescription()}"></td>-->
+<!--                            <td th:text="*{getCheckDate()}"></td>-->
+<!--                        </tr>-->
+                    </tbody>
+                </table>
+            </div>
+    </section>
+</body>
+</html>
