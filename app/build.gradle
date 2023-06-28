@@ -1,7 +1,7 @@
 plugins {
     id 'application'
     id 'checkstyle'
-    id 'com.adarshr.test-logger' version '3.0.0'
+    id 'com.adarshr.test-logger' version '3.2.0'
     id 'com.github.ben-manes.versions' version '0.39.0'
     id 'io.ebean' version '13.17.4'
     id 'jacoco'
@@ -39,12 +39,17 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testImplementation 'io.ebean:ebean-test:13.15.0'
+    testImplementation 'com.konghq:unirest-java:3.14.4'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
+}
+
+testlogger {
+    showStandardStreams true
 }
 
 jacocoTestReport {
