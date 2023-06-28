@@ -7,6 +7,10 @@
 </head>
 <body>
     <section layout:fragment="content">
+        <div th:if="${session.flash}" class="alert alert-danger alert-dismissible fade show m-0 rounded-0" role="alert">
+            <p class="m-0" th:text="${ctx.consumeSessionAttribute('flash')}"></p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <div class="container-fluid bg-dark p-5">
             <div class="row">
                 <div class="col-sm-10 mx-auto text-white">
@@ -15,7 +19,7 @@
                     <form action="/urls" method="post">
                         <div class="row">
                             <div class="col-9">
-                                <input type="url" id="url-1" autofocus required class="form-control w-100" name="url" placeholder="Ссылка">
+                                <input type="text" id="url-1" autofocus required class="form-control w-100" name="url" placeholder="Ссылка">
                             </div>
                             <div class="col-3">
                                 <button type="submit" class="btn btn-primary h-100 ">Проверить</button>

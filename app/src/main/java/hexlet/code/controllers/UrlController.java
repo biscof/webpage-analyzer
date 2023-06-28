@@ -20,7 +20,7 @@ public class UrlController {
             receivedUrl = new URL(ctx.formParam("url"));
         } catch (MalformedURLException e) {
             ctx.sessionAttribute("flash", "Некорректный URL");
-            ctx.render("index.html");
+            ctx.redirect("/");
             return;
         }
 
