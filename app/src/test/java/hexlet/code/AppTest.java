@@ -13,7 +13,10 @@ import org.junit.jupiter.api.Test;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class AppTest {
     private static Javalin app;
@@ -31,7 +34,7 @@ class AppTest {
 
     @AfterAll
     public static void afterAll() {
-//        database.script().run("/truncate.sql");
+        database.script().run("/truncate.sql");
         app.stop();
     }
 
@@ -63,7 +66,7 @@ class AppTest {
         assertEquals(200, responseGet.getStatus());
         assertTrue(responseGet.getBody().contains("Страница успешно добавлена"));
         assertTrue(responseGet.getBody().contains(newUrlName));
-        
+
         Url url = new QUrl()
                 .name.equalTo(newUrlName)
                 .findOne();
