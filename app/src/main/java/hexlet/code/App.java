@@ -17,7 +17,6 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Map;
 
 public class App {
     private static int getPort() {
