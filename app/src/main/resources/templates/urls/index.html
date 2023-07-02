@@ -6,26 +6,26 @@
 </head>
 <body>
     <section layout:fragment="content">
-        <div class="container">
-            <div th:if="${session.flash}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
-                <p class="m-0" th:text="${ctx.consumeSessionAttribute('flash')}"></p>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            <div class="mt-5">
+        <div th:if="${session.flash}" th:class="'alert alert-dismissible fade show m-0 rounded-0 alert-' + ${ctx.consumeSessionAttribute('flash-type')}" role="alert">
+            <p class="m-0" th:text="${ctx.consumeSessionAttribute('flash')}"></p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div class="container-fluid p-3">
+            <div class="container-lg mt-5">
                 <h1 >Сайты</h1>
-                <table class="table">
+                <table class="table table-bordered mt-3">
                     <thead>
-                        <th>ID</th>
+                        <th class="col-1">ID</th>
                         <th>Имя</th>
-                        <th>Последняя проверка</th>
-                        <th>Код ответа</th>
+                        <th class="col-3">Последняя проверка</th>
+                        <th class="col-1">Код ответа</th>
                     </thead>
                     <tbody>
                         <tr th:each="url : ${urls}" th:object="${url}">
                             <td th:text="*{getId()}"></td>
                             <td><a th:href="@{/urls/{id}(id=*{getId()})}" th:text="*{getName()}"></a></td>
-                            <td></td>
-                            <td></td>
+                            <td th:text="*{getLatestCheck()} ? ${#temporals.format(url.getLatestCheck().getCreatedAt(), 'dd/MM/yyyy HH:mm')} : ''"></td>
+                            <td th:text="*{getLatestCheck()} ? *{getLatestCheck().getStatusCode()} : ''"></td>
                         </tr>
                     </tbody>
                 </table>

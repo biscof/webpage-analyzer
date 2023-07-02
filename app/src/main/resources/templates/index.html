@@ -7,7 +7,7 @@
 </head>
 <body>
     <section layout:fragment="content">
-        <div th:if="${session.flash}" class="alert alert-danger alert-dismissible fade show m-0 rounded-0" role="alert">
+        <div th:if="${session.flash}" th:class="'alert alert-dismissible fade show m-0 rounded-0 alert-' + ${ctx.consumeSessionAttribute('flash-type')}" role="alert">
             <p class="m-0" th:text="${ctx.consumeSessionAttribute('flash')}"></p>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>

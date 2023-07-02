@@ -6,26 +6,26 @@
 </head>
 <body>
     <section layout:fragment="content">
-        <div class="container">
-            <div th:if="${session.flash}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
-                <p class="m-0" th:text="${ctx.consumeSessionAttribute('flash')}"></p>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+        <div th:if="${session.flash}" th:class="'alert alert-info fade show m-0 rounded-0 dismissible alert-' + ${ctx.consumeSessionAttribute('flash-type')}" role="alert">
+            <p class="m-0" th:text="${ctx.consumeSessionAttribute('flash')}"></p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div class="container-fluid p-3">
             <div class="mt-5" th:object="${url}">
                 <h1 th:text="'Сайт ' + *{getName()}"></h1>
-                <table class="table">
+                <table class="table table table-bordered mt-3">
                     <tbody>
                     <tr>
-                        <td>ID</td>
-                        <td th:text="*{getId()}"></td>
+                        <td class="col-4">ID</td>
+                        <td class="col-4" th:text="*{getId()}"></td>
                     </tr>
                     <tr>
-                        <td>Имя</td>
-                        <td th:text="*{getName()}"></td>
+                        <td class="col-4">Имя</td>
+                        <td class="col-4" th:text="*{getName()}"></td>
                     </tr>
                     <tr>
-                        <td>Дата создания</td>
-                        <td th:text="${#temporals.format(url.getCreatedAt(), 'dd/MM/yyyy HH:mm')}"></td>
+                        <td class="col-4">Дата создания</td>
+                        <td class="col-4" th:text="${#temporals.format(url.getCreatedAt(), 'dd/MM/yyyy HH:mm')}"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -35,24 +35,24 @@
                 <form th:action="@{/urls/{id}/checks(id=${url.getId()})}" method="post">
                     <button type="submit" class="btn btn-primary">Запустить проверку</button>
                 </form>
-                <table class="table">
+                <table class="table table-bordered mt-3">
                     <thead>
-                        <th>ID</th>
-                        <th>title</th>
-                        <th>Код ответа</th>
-                        <th>h1</th>
-                        <th>description</th>
-                        <th>Дата проверки</th>
+                        <th class="col-1">ID</th>
+                        <th class="col-1">Код ответа</th>
+                        <th>Название</th>
+                        <th>Заголовок h1</th>
+                        <th>Описание</th>
+                        <th class="col-2">Дата проверки</th>
                     </thead>
                     <tbody>
-<!--                        <tr th:each="check : ${checks}" th:object="${check}">-->
-<!--                            <td th:text="*{getId()}"></td>-->
-<!--                            <td th:text="*{getResponseCode()}"></td>-->
-<!--                            <td th:text="*{getTitle()}"></td>-->
-<!--                            <td th:text="*{getH1()}"></td>-->
-<!--                            <td th:text="*{getDescription()}"></td>-->
-<!--                            <td th:text="*{getCheckDate()}"></td>-->
-<!--                        </tr>-->
+                        <tr th:each="check : ${url.getUrlChecks()}" th:object="${check}">
+                            <td th:text="*{getId()}"></td>
+                            <td th:text="*{getStatusCode()}"></td>
+                            <td th:text="*{getTitle()}"></td>
+                            <td th:text="*{getH1()}"></td>
+                            <td th:text="*{getDescription()}"></td>
+                            <td th:text="${#temporals.format(check.getCreatedAt(), 'dd/MM/yyyy HH:mm')}"></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
