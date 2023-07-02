@@ -2,21 +2,28 @@ package hexlet.code;
 
 import hexlet.code.models.Url;
 import hexlet.code.models.query.QUrl;
+
+import io.javalin.Javalin;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
+import kong.unirest.Empty;
+
 import io.ebean.DB;
 import io.ebean.Database;
-import io.javalin.Javalin;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import kong.unirest.HttpResponse;
-import kong.unirest.Unirest;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.io.IOException;
+
 
 class AppTest {
     private static Javalin app;
@@ -39,7 +46,7 @@ class AppTest {
     }
 
     @BeforeEach
-    void beforeEach() {
+    void beforeEach() throws IOException {
         database.script().run("/truncate.sql");
         database.script().run("/seed.sql");
     }
@@ -76,6 +83,46 @@ class AppTest {
     }
 
     @Test
+    void testCreateUrlValidInputWithPort() {
+        String initUrl = "http://testwebsite.com:3523/community/users";
+        String newUrlName = "http://testwebsite.com:3523";
+
+        HttpResponse responsePost = Unirest.post(baseUrl + "/urls")
+                .field("url", initUrl)
+                .asEmpty();
+        assertEquals(302, responsePost.getStatus());
+        assertEquals("/urls", responsePost.getHeaders().getFirst("Location"));
+
+        HttpResponse<String> responseGet = Unirest.get(baseUrl + "/urls?page=2").asString();
+        assertEquals(200, responseGet.getStatus());
+        assertTrue(responseGet.getBody().contains("Страница успешно добавлена"));
+        assertTrue(responseGet.getBody().contains(newUrlName));
+
+        Url url = new QUrl()
+                .name.equalTo(newUrlName)
+                .findOne();
+
+        assertNotNull(url);
+        assertEquals(newUrlName, url.getName());
+    }
+
+    @Test
+    void testCreateUrlAlreadyExists() {
+        String initUrl = "https://last.fm/test-1/test-2";
+        String newUrlName = "https://last.fm";
+
+        HttpResponse responsePost = Unirest.post(baseUrl + "/urls")
+                .field("url", initUrl)
+                .asEmpty();
+        assertEquals(302, responsePost.getStatus());
+        assertEquals("/urls", responsePost.getHeaders().getFirst("Location"));
+
+        HttpResponse<String> responseGet = Unirest.get(baseUrl + "/urls").asString();
+        assertEquals(200, responseGet.getStatus());
+        assertTrue(responseGet.getBody().contains("Страница уже существует"));
+    }
+
+    @Test
     void testCreateUrlInvalidInput() {
         String invalidUrl = "http//testwebsitecom/community/users";
 
@@ -105,12 +152,41 @@ class AppTest {
     }
 
     @Test
-    void showUrl() {
+    void testShowUrl() {
         HttpResponse<String> response = Unirest.get(baseUrl + "/urls/{id}")
                 .routeParam("id", "3")
                 .asString();
         assertEquals(200, response.getStatus());
         assertTrue(response.getBody().contains("http://amazon.de"));
         assertTrue(response.getBody().contains("28/06/2023 02:30"));
+    }
+
+    @Test
+    void testCreateUrlCheck() throws IOException {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("<h1>Test website</h1>"));
+        server.start();
+
+        String testUrlName = server.url("/").toString();
+
+        Url testUrl = new Url(testUrlName);
+        testUrl.save();
+        long testUrlId = testUrl.getId();
+
+        HttpResponse<Empty> responsePost = Unirest.post(baseUrl + "/urls/{id}/checks")
+                .routeParam("id", String.valueOf(testUrlId))
+                .asEmpty();
+
+        server.shutdown();
+
+        assertEquals(302, responsePost.getStatus());
+        assertEquals("/urls/" + testUrlId, responsePost.getHeaders().getFirst("Location"));
+
+        HttpResponse<String> responseGet = Unirest.get(baseUrl + "/urls/{id}")
+                .routeParam("id", String.valueOf(testUrlId))
+                .asString();
+        assertEquals(200, responseGet.getStatus());
+        assertTrue(responseGet.getBody().contains("Страница успешно проверена"));
+        assertTrue(responseGet.getBody().contains("200"));
     }
 }
