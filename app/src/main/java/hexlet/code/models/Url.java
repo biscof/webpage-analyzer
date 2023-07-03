@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table
-public class Url extends Model {
+public final class Url extends Model {
     @Id
     private long id;
     private String name;

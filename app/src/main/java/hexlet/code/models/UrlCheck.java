@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @Table
-public class UrlCheck extends Model {
+public final class UrlCheck extends Model {
     @Id
     private long id;
     private int statusCode;
