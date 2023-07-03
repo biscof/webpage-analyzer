@@ -164,7 +164,18 @@ class AppTest {
     @Test
     void testCreateUrlCheck() throws IOException {
         MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setBody("<h1>Test website</h1>"));
+        String testHtml = """
+                <html>
+                    <head>
+                        <meta name="description" content="test-description">
+                        <title>test-title</title>
+                    </head>
+                    <body>
+                        <h1>test-header</h1>
+                    </body>
+                </html>"
+                """;
+        server.enqueue(new MockResponse().setBody(testHtml));
         server.start();
 
         String testUrlName = server.url("/").toString();
@@ -186,7 +197,9 @@ class AppTest {
                 .routeParam("id", String.valueOf(testUrlId))
                 .asString();
         assertEquals(200, responseGet.getStatus());
-        assertTrue(responseGet.getBody().contains("Страница успешно проверена"));
         assertTrue(responseGet.getBody().contains("200"));
+        assertTrue(responseGet.getBody().contains("test-description"));
+        assertTrue(responseGet.getBody().contains("test-title"));
+        assertTrue(responseGet.getBody().contains("test-header"));
     }
 }

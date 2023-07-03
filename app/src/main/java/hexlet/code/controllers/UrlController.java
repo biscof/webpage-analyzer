@@ -7,6 +7,9 @@ import io.ebean.PagedList;
 import io.javalin.http.Handler;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -87,8 +90,6 @@ public class UrlController {
                 .id.equalTo(currentId)
                 .findOne();
 
-        url.getUrlChecks().forEach(System.out::println);
-
         ctx.attribute("url", url);
         ctx.render("urls/show.html");
     };
@@ -102,8 +103,17 @@ public class UrlController {
         if (url != null) {
             String requestUrl = url.getName();
             HttpResponse<String> responseGet = Unirest.get(requestUrl).asString();
+
+            // Getting parameter values for a UrlCheck object
             int status = responseGet.getStatus();
-            UrlCheck urlCheck = new UrlCheck(status, "title-1", "header-1", "description-1", url);
+            Document htmlDoc = Jsoup.parse(responseGet.getBody());
+            String htmlTitle = htmlDoc.title();
+            Element h1 = htmlDoc.selectFirst("h1");
+            String h1Content = h1 == null ? "" : h1.text();
+            Element description = htmlDoc.selectFirst("meta[name=description]");
+            String descriptionContent = description == null ? "" : description.attr("content");
+
+            UrlCheck urlCheck = new UrlCheck(status, htmlTitle, h1Content, descriptionContent, url);
             urlCheck.save();
 
             ctx.attribute("urlCheck", urlCheck);
