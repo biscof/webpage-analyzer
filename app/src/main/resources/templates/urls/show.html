@@ -6,7 +6,7 @@
 </head>
 <body>
     <section layout:fragment="content">
-        <div th:if="${session.flash}" th:class="'alert alert-info fade show m-0 rounded-0 dismissible alert-' + ${ctx.consumeSessionAttribute('flash-type')}" role="alert">
+        <div th:if="${session.flash}" th:class="'alert alert-dismissible fade show m-0 rounded-0 alert-' + ${ctx.consumeSessionAttribute('flash-type')}" role="alert">
             <p class="m-0" th:text="${ctx.consumeSessionAttribute('flash')}"></p>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -39,18 +39,18 @@
                     <thead>
                         <th class="col-1">ID</th>
                         <th class="col-1">Код ответа</th>
-                        <th>Название</th>
+                        <th class="col-3">Название</th>
                         <th>Заголовок h1</th>
-                        <th>Описание</th>
+                        <th class="col-3">Описание</th>
                         <th class="col-2">Дата проверки</th>
                     </thead>
                     <tbody>
                         <tr th:each="check : ${url.getUrlChecks()}" th:object="${check}">
                             <td th:text="*{getId()}"></td>
                             <td th:text="*{getStatusCode()}"></td>
-                            <td th:text="*{getTitle()}"></td>
+                            <td th:text="${#strings.abbreviate(check.getTitle(), 100)}"></td>
                             <td th:text="*{getH1()}"></td>
-                            <td th:text="*{getDescription()}"></td>
+                            <td th:text="${#strings.abbreviate(check.getDescription(), 100)}"></td>
                             <td th:text="${#temporals.format(check.getCreatedAt(), 'dd/MM/yyyy HH:mm')}"></td>
                         </tr>
                     </tbody>
