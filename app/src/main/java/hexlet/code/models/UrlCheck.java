@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.ManyToOne;
 
 @Entity
-@Table(name = "check")
+@Table
 public class UrlCheck extends Model {
     @Id
     private long id;

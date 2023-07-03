@@ -1,4 +1,4 @@
-INSERT INTO urls (name, created_at) VALUES
+INSERT INTO url (name, created_at) VALUES
     ('https://domainmarket.com', '2023-06-28 01:30:40'),
     ('https://typepad.com', '2023-06-28 01:00:40'),
     ('http://amazon.de', '2023-06-28 02:30:06'),
