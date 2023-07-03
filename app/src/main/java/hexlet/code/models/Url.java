@@ -14,7 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Entity
-@Table(name = "urls")
+@Table(name = "url")
 public class Url extends Model {
     @Id
     private long id;
