@@ -19,7 +19,7 @@ public class UrlController {
 
     public static Handler createUrl = ctx -> {
         URL receivedUrl;
-        String formatedUrl;
+        String formattedUrl;
         StringBuilder stringBuilder = new StringBuilder();
 
         try {
@@ -32,12 +32,12 @@ public class UrlController {
         }
 
         if (receivedUrl.getPort() == -1) {
-            formatedUrl = stringBuilder.append(receivedUrl.getProtocol())
+            formattedUrl = stringBuilder.append(receivedUrl.getProtocol())
                     .append("://")
                     .append(receivedUrl.getHost())
                     .toString();
         } else {
-            formatedUrl = stringBuilder.append(receivedUrl.getProtocol())
+            formattedUrl = stringBuilder.append(receivedUrl.getProtocol())
                     .append("://")
                     .append(receivedUrl.getHost())
                     .append(":")
@@ -46,11 +46,11 @@ public class UrlController {
         }
 
         Url url = new QUrl()
-            .name.equalTo(formatedUrl)
+            .name.equalTo(formattedUrl)
             .findOne();
 
         if (url == null) {
-            Url newUrl = new Url(formatedUrl);
+            Url newUrl = new Url(formattedUrl);
             newUrl.save();
             ctx.sessionAttribute("flash", "Страница успешно добавлена");
             ctx.sessionAttribute("flash-type", "success");

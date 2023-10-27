@@ -1,17 +1,15 @@
 #Makefile
 
 prepare:
-	gradle clean
-	gradle installDist
+	./gradlew clean installDist
 
-build:
-	gradle clean
-	gradle build
-	gradle test
-	gradle checkstyleMain
-	gradle checkstyleTest
+build-and-check:
+	./gradlew clean build test checkstyleMain checkstyleTest
 
 report:
-	gradle jacocoTestReport
+	./gradlew jacocoTestReport
+
+docker-db-start:
+	docker-compose -f docker/docker-compose.yml up -d -V --remove-orphans
 
 .PHONY: build
