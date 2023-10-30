@@ -4,6 +4,10 @@ ebean:
     platform: h2
     ddlMode: dropCreate
     dbName: test
+    h2:
+      username: sa
+      password:
+      url: jdbc:h2:mem:test
   ddl:
     run: true
     generate: true
