@@ -56,6 +56,10 @@ testlogger {
     showStandardStreams true
 }
 
+jacoco {
+    toolVersion = '0.8.11'
+}
+
 jacocoTestReport {
     dependsOn test
     reports {
