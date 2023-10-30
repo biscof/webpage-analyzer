@@ -9,7 +9,10 @@ build-and-check:
 report:
 	./gradlew jacocoTestReport
 
-docker-db-start:
-	docker-compose -f docker/docker-compose.yml up -d -V --remove-orphans
+build-docker-image:
+	docker build --tag 'webpage-analyzer' .
+
+run-docker-image-dev:
+	docker run --detach -p 8000:8000  webpage-analyzer
 
 .PHONY: build
