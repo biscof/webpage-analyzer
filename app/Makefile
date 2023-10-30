@@ -15,4 +15,7 @@ build-docker-image:
 run-docker-image-dev:
 	docker run --detach -p 8000:8000  webpage-analyzer
 
+test:
+	./gradlew test
+
 .PHONY: build
